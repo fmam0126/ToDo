@@ -1,6 +1,8 @@
 ﻿using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace Todo.Tests
@@ -15,7 +17,7 @@ namespace Todo.Tests
         }
 
         [Fact]
-        public async Task CanGetTodoList()
+        public async Task EnsureTodoListNotNull()
         {
             // Arrange
             var client = _factory.CreateClient();
@@ -28,5 +30,27 @@ namespace Todo.Tests
             Assert.NotNull(response.Content);
 
         }
+        [Fact]
+        public async Task CanAddItemToTodoList()
+        {
+            // Arrange
+            var client = _factory.CreateClient();
+
+            var newTodo = new
+            {
+                Title = "Test Todo",
+                IsCompleted = false
+            };
+            // Act
+
+            var response = await client.PostAsync("/todos", new StringContent(JsonConvert.SerializeObject(newTodo), Encoding.UTF8, "application/json"));
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+            
+            Assert.NotNull(response.Content);
+            
+        }
+
     }
 }

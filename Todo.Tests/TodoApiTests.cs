@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -31,7 +32,7 @@ namespace Todo.Tests
 
         }
         [Fact]
-        public async Task CanAddItemToTodoList()
+        public async Task CanSendPostRequestToApi()
         {
             // Arrange
             var client = _factory.CreateClient();
@@ -51,6 +52,30 @@ namespace Todo.Tests
             Assert.NotNull(response.Content);
             
         }
+        [Fact]
+        public async Task CanAddTaskToList()
+        {
+            // Arrange
+            var client = _factory.CreateClient();
+            var newTodo = new
+            {
+                Title = "Test Todo",
+                IsCompleted = false
+            };
+            
+            // Act
+
+            var response = await client.PostAsync("/todos", new StringContent(JsonConvert.SerializeObject(newTodo), Encoding.UTF8, "application/json"));
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+            var result = await response.Content.ReadFromJsonAsync<TodoResponse>();
+            Assert.NotNull(result);
+            Assert.Equal(newTodo.Title, result.Title);
+            Assert.NotEqual(0, result.Id);
+
+        }
+        private record TodoResponse(int Id, string Title, bool IsCompleted);
 
     }
 }

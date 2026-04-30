@@ -7,9 +7,14 @@ namespace ToDo.Api.Controllers
     public class TodoController : ControllerBase
     {
        [HttpGet]
-       public async Task<IActionResult> Get()
+       public async Task<IActionResult> GetTodoList()
         { 
            return Ok();
+        }
+        [HttpPost]
+        public async Task<IActionResult> PostTodoItem()
+        {
+            return Ok();
         }
     }
 }

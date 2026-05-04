@@ -111,29 +111,29 @@ namespace Todo.Tests
             Assert.Equal(newTodo.Title, todo.Title);
             Assert.NotEqual(0, todo.Id);
         }
+        [Fact]
+        public async Task CanSetTaskAsCompleted()
+        {
+            // Arrange
+            var client = _factory.CreateClient();
+            var newTodo = new
+            {
+                Title = "Test Todo",
+                IsCompleted = false
+            };
+            var creationResponse = await client.PostAsync("/todos", new StringContent(JsonConvert.SerializeObject(newTodo), Encoding.UTF8, "application/json"));
 
+            creationResponse.EnsureSuccessStatusCode();
+            // Act
+            var response = await client.PatchAsync("/todos/1", new StringContent(JsonConvert.SerializeObject(new { IsCompleted = true }), Encoding.UTF8, "application/json"));
+            response.EnsureSuccessStatusCode();
 
-
-
-        //[Fact]
-        //public async Task CanSetTaskAsCompleted() {
-        //    // Arrange
-        //    var client = _factory.CreateClient();
-        //    var newTodo = new
-        //    {
-        //        Title = "Test Todo",
-        //        IsCompleted = false
-        //    };
-        //    var creationResponse = await client.PostAsync("/todos", new StringContent(JsonConvert.SerializeObject(newTodo), Encoding.UTF8, "application/json"));
-            
-        //    creationResponse.EnsureSuccessStatusCode();
-        //    // Act
-        //    var response = await client.PatchAsync("/todos/1/complete", new StringContent(JsonConvert.SerializeObject(new { IsCompleted = true }), Encoding.UTF8, "application/json"));
-        //    response.EnsureSuccessStatusCode();
-
-        //    var getResponse = await client.GetAsync("/todos");
-        //    // Assert
-        //    Assert.NotNull(getResponse);
-
+            var getResponse = await client.GetAsync("/todos/1");
+            // Assert
+            getResponse.EnsureSuccessStatusCode();
+            var todo = await getResponse.Content.ReadFromJsonAsync<TodoResponse>();
+            Assert.NotNull(todo);
+            Assert.True(todo.IsCompleted);
         }
     }
+}

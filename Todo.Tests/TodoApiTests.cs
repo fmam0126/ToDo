@@ -16,6 +16,7 @@ namespace Todo.Tests
         {
             _factory = factory;
         }
+        private record TodoResponse(int Id, string Title, bool IsCompleted);
 
         [Fact]
         public async Task EnsureTodoListNotNull()
@@ -30,6 +31,18 @@ namespace Todo.Tests
             response.EnsureSuccessStatusCode();
             Assert.NotNull(response.Content);
 
+        }
+        [Fact]
+        public async Task CanRetrieveTodoList()
+        {
+            // Arrange
+            var client = _factory.CreateClient();
+            // Act
+            var response = await client.GetAsync("/todos");
+            // Assert
+            response.EnsureSuccessStatusCode();
+            var todos = await response.Content.ReadFromJsonAsync<TodoResponse[]>();
+            Assert.NotNull(todos);
         }
         [Fact]
         public async Task CanSendPostRequestToApi()
@@ -75,7 +88,6 @@ namespace Todo.Tests
             Assert.NotEqual(0, result.Id);
 
         }
-        private record TodoResponse(int Id, string Title, bool IsCompleted);
 
     }
 }

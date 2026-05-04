@@ -1,5 +1,11 @@
+using ToDo.Api.Models;
+
+using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<TodoContext>(options =>
+    options.UseInMemoryDatabase("TodoList"));
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -12,6 +18,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();

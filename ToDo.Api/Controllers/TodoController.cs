@@ -46,5 +46,17 @@ namespace ToDo.Api.Controllers
 
             return CreatedAtAction(nameof(GetTodoList), new { id = Todo.Id }, Todo);
         }
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> MarkAsComplete(int id)
+        {
+            var todo = await _todoContext.Todos.FindAsync(id);
+            if (todo == null)
+            {
+                return NotFound();
+            }
+            todo.IsCompleted = true;
+            await _todoContext.SaveChangesAsync();
+            return NoContent();
+        }
     }
 }

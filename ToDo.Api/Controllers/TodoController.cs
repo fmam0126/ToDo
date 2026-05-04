@@ -22,6 +22,16 @@ namespace ToDo.Api.Controllers
             var todos = await _todoContext.Todos.ToListAsync();
             return Ok(todos);
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetTodoById(int id)
+        {
+            var todo = await _todoContext.Todos.FindAsync(id);
+            if (todo == null)
+            {
+                return NotFound();
+            }
+            return Ok(todo);
+        }
         [HttpPost]
         public async Task<IActionResult> PostTodoItem(TodoDTO newTodo)
         {

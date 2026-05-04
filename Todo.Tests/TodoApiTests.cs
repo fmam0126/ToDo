@@ -2,6 +2,7 @@
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 using Xunit;
@@ -134,6 +135,38 @@ namespace Todo.Tests
             var todo = await getResponse.Content.ReadFromJsonAsync<TodoResponse>();
             Assert.NotNull(todo);
             Assert.True(todo.IsCompleted);
+        }
+        [Fact]
+        public async Task CanDeleteTask()
+        {
+            // Arrange
+            var client = _factory.CreateClient();
+            var newTodo = new
+            {
+                Title = "Winning",
+                IsCompleted = false
+            };
+            var newTodo2 = new
+            {
+                Title = "losing",
+                IsCompleted = false
+            };
+            var creationResponse = await client.PostAsync("/todos", new StringContent(JsonConvert.SerializeObject(newTodo), Encoding.UTF8, "application/json"));
+            creationResponse.EnsureSuccessStatusCode();
+
+            creationResponse = await client.PostAsync("/todos", new StringContent(JsonConvert.SerializeObject(newTodo2), Encoding.UTF8, "application/json"));
+            creationResponse.EnsureSuccessStatusCode();
+
+            // Act
+            var deletionResponse = await client.DeleteAsync("/todos/2");
+
+            // Assert
+            var getResponse = await client.GetAsync("/todos/1");
+            getResponse.EnsureSuccessStatusCode();
+            var todo = await getResponse.Content.ReadFromJsonAsync<TodoResponse>();
+            Assert.NotNull(todo);
+            getResponse = await client.GetAsync("/todos/2");
+            Assert.Equal(404, (int)getResponse.StatusCode);
         }
     }
 }

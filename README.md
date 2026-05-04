@@ -30,7 +30,7 @@ dotnet test
 ```
 
 ## Project Structure
-- `Todo/` - Main API project
+- `Todo.Api/` - Main API project
 - `Todo.Tests/` - Test project containing all TDD test cases
 
 ## Learning TDD

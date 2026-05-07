@@ -1,5 +1,7 @@
 <Solution>
   <Folder Name="/Solution Items/">
+    <File Path=".dockerignore" />
+    <File Path="compose.yml" />
     <File Path="README.md" />
   </Folder>
   <Project Path="ToDo.Api/ToDo.Api.csproj" />

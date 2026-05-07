@@ -3,6 +3,8 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+.env
+
 # User-specific files
 *.rsuser
 *.suo
@@ -363,3 +365,6 @@ MigrationBackup/
 FodyWeavers.xsd
 /ToDo.Api/appsettings.json
 /ToDo.Api/appsettings.Development.json
+/ToDo.Api/Migrations/20260507120419_InitialCreate.cs
+/ToDo.Api/Migrations/TodoContextModelSnapshot.cs
+/ToDo.Api/Migrations/20260507120419_InitialCreate.Designer.cs
